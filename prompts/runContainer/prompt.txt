@@ -1,0 +1,8 @@
+here is a command to run a docker container:
+
+docker run -it --rm -v "$PWD":/app/content index-generator --input /app/your-input-file.pdf --blacklist /app/your-blacklist.txt--dir content/
+
+
+write a sh script that takes two inputs, pdf and blacklist
+
+it should also check if these inputs are there and return a help message if they were not provided.
