@@ -1,5 +1,10 @@
 import os
 import re
+import nltk
+# Download the required NLTK resource
+nltk.download('averaged_perceptron_tagger')
+from nltk.corpus import wordnet
+from nltk.stem import WordNetLemmatizer, PorterStemmer
 import PyPDF2
 import reportlab
 from reportlab.pdfgen import canvas
@@ -12,7 +17,33 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import letter
 
 
-def extract_words(pdf_path, blacklist):
+def get_wordnet_pos(word):
+    """Map POS tag to first character lemmatize() accepts"""
+    tag = nltk.pos_tag([word])[0][1][0].upper()
+    tag_dict = {"J": wordnet.ADJ,
+                "N": wordnet.NOUN,
+                "V": wordnet.VERB,
+                "R": wordnet.ADV}
+
+    return tag_dict.get(tag, wordnet.NOUN)
+
+
+def stem_and_lemmatize(word):
+    lemmatizer = WordNetLemmatizer()
+    stemmer = PorterStemmer()
+    lemma = lemmatizer.lemmatize(word, get_wordnet_pos(word))
+    stem = stemmer.stem(word)
+    return stem, lemma
+
+
+def is_conjugation_or_stem(base_word, other_word):
+    base_stem, base_lemma = stem_and_lemmatize(base_word)
+    other_stem, other_lemma = stem_and_lemmatize(other_word)
+
+    return base_stem == other_stem or base_lemma == other_lemma
+
+
+def extract_words(pdf_path, whitelist):
     # Open the PDF file
     with open(pdf_path, 'rb') as file:
         reader = PyPDF2.PdfReader(file)
@@ -28,8 +59,10 @@ def extract_words(pdf_path, blacklist):
             # Store each word and its page number
             for word in words:
                 word = word.lower()  # make word lowercase
-                if word not in blacklist:
-                    word_pages[word].add(page_num + 1)  # add 1 to start pages at 1
+                for base_word in whitelist:
+                    if word == base_word or word.rstrip('es') == base_word or word.rstrip('s') == base_word or is_conjugation_or_stem(base_word, word):
+                        word_pages[word].add(page_num + 1)  # add 1 to start pages at 1
+                        break
 
     return word_pages
 
@@ -58,15 +91,16 @@ def create_index_pdf(word_pages, dir_path):
 
 def main(args):
     pdf_path = args.pdf
-    blacklist_path = args.blacklist
+    whitelist_path = args.whitelist
     dir_path = args.dir
 
-    # Read the blacklist words
-    with open(blacklist_path, 'r') as file:
-        blacklist = set(line.strip().lower() for line in file)  # make blacklist words lowercase
+    # Read the whitelist words
+    with open(whitelist_path, 'r') as file:
+        whitelist = set(line.strip().lower
+        for line in file)  # make whitelist words lowercase
 
     # Extract the words and their pages from the PDF
-    word_pages = extract_words(pdf_path, blacklist)
+    word_pages = extract_words(pdf_path, whitelist)
 
     # Create the index.pdf file
     create_index_pdf(word_pages, dir_path)
@@ -75,7 +109,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process a PDF file and create an index PDF.")
     parser.add_argument("--pdf", help="Path to the PDF file")
-    parser.add_argument("--blacklist", help="Path to the blacklist file")
+    parser.add_argument("--whitelist", help="Path to the whitelist file")
     parser.add_argument("--dir", help="Path to the output directory")
     args = parser.parse_args()
 
