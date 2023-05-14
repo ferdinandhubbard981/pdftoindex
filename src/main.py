@@ -85,7 +85,7 @@ def create_index_pdf(word_pages, dir_path):
         text = f"{word}: {', '.join(map(str, pages))}"
         para = Paragraph(text, styles["BodyText"])
         Story.append(para)
-        Story.append(Spacer(1, 12))
+        Story.append(Spacer(1, 6))
 
     doc.build(Story)
 
