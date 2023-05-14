@@ -1,15 +1,13 @@
+Here is a python script:
+
+```
 import os
-import re
 import PyPDF2
 import reportlab
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from collections import defaultdict
 import argparse
-from reportlab.lib.utils import ImageReader
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib.pagesizes import letter
 
 
 def extract_words(pdf_path, blacklist):
@@ -23,11 +21,10 @@ def extract_words(pdf_path, blacklist):
         # Go through each page
         for page_num in range(len(reader.pages)):
             page = reader.pages[page_num]
-            words = re.findall(r'\b\w+\b', page.extract_text())
+            words = page.extract_text().split()
 
             # Store each word and its page number
             for word in words:
-                word = word.lower()  # make word lowercase
                 if word not in blacklist:
                     word_pages[word].add(page_num + 1)  # add 1 to start pages at 1
 
@@ -37,23 +34,31 @@ def extract_words(pdf_path, blacklist):
 def create_index_pdf(word_pages, dir_path):
     # Create the index.pdf file
     index_pdf_path = os.path.join(dir_path, "index.pdf")
-
-    doc = SimpleDocTemplate(index_pdf_path, pagesize=letter)
-    Story = []
-    styles = getSampleStyleSheet()
+    c = canvas.Canvas(index_pdf_path, pagesize=letter)
 
     # Sort the words
     sorted_words = sorted(word_pages.keys(), key=lambda word: word.lower())
 
+    textobject = c.beginText()
+    textobject.setFont("Helvetica", 10)
+    textobject.setTextOrigin(10, 750)
+
     # Write each word and its pages
     for word in sorted_words:
         pages = sorted(word_pages[word])
-        text = f"{word}: {', '.join(map(str, pages))}"
-        para = Paragraph(text, styles["BodyText"])
-        Story.append(para)
-        Story.append(Spacer(1, 12))
+        textobject.textLine(f"{word}: {', '.join(map(str, pages))}")
 
-    doc.build(Story)
+        # Start a new page if the current one is full
+        if textobject.getY() <= 50:
+            c.drawText(textobject)
+            c.showPage()
+            textobject = c.beginText()
+            textobject.setFont("Helvetica", 10)
+            textobject.setTextOrigin(10, 750)
+
+    # Draw the last text object and save the PDF
+    c.drawText(textobject)
+    c.save()
 
 
 def main(args):
@@ -63,7 +68,7 @@ def main(args):
 
     # Read the blacklist words
     with open(blacklist_path, 'r') as file:
-        blacklist = set(line.strip().lower() for line in file)  # make blacklist words lowercase
+        blacklist = set(line.strip() for line in file)
 
     # Extract the words and their pages from the PDF
     word_pages = extract_words(pdf_path, blacklist)
@@ -80,3 +85,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     main(args)
+
+```
+
+Rewrite it such that:
+the outputed words are all lowercase. words are compared after they are lowercased
+disregard any non-letter characters
+if text exceeds page width, wrap to next line

@@ -1,0 +1,42 @@
+Here is a python script:
+
+```
+{script.txt}
+```
+
+Rewrite it such that instead of using a blacklist, it uses a whitelist.
+If a word has the following properties it should be included in the index, otherwise it should be ignored:
+    - is in the whitelist
+    - reduces to a a word in the whitelist
+    - is a word in the whitelist but with a trailing 's' or 'es' or has punctuation at the end or is capitalized differently
+
+a word reduces to another word if it satisfies the function called is_conjugation_or_stem returns true:
+```
+
+# You might need to download Wordnet and Punkt if you haven't already
+# nltk.download('wordnet')
+# nltk.download('punkt')
+
+def get_wordnet_pos(word):
+    """Map POS tag to first character lemmatize() accepts"""
+    tag = nltk.pos_tag([word])[0][1][0].upper()
+    tag_dict = {"J": wordnet.ADJ,
+                "N": wordnet.NOUN,
+                "V": wordnet.VERB,
+                "R": wordnet.ADV}
+
+    return tag_dict.get(tag, wordnet.NOUN)
+
+def stem_and_lemmatize(word):
+    lemmatizer = WordNetLemmatizer()
+    stemmer = PorterStemmer()
+    lemma = lemmatizer.lemmatize(word, get_wordnet_pos(word))
+    stem = stemmer.stem(word)
+    return stem, lemma
+
+def is_conjugation_or_stem(base_word, other_word):
+    base_stem, base_lemma = stem_and_lemmatize(base_word)
+    other_stem, other_lemma = stem_and_lemmatize(other_word)
+
+    return base_stem == other_stem or base_lemma == other_lemma
+```
