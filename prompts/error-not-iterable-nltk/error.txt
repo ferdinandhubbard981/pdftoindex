@@ -1,0 +1,27 @@
+[nltk_data] Downloading package averaged_perceptron_tagger to
+[nltk_data]     /root/nltk_data...
+[nltk_data]   Unzipping taggers/averaged_perceptron_tagger.zip.
+Traceback (most recent call last):
+  File "/app/src/main.py", line 116, in <module>
+    main(args)
+  File "/app/src/main.py", line 103, in main
+    word_pages = extract_words(pdf_path, whitelist)
+  File "/app/src/main.py", line 63, in extract_words
+    if word == base_word or word.rstrip('es') == base_word or word.rstrip('s') == base_word or is_conjugation_or_stem(base_word, word):
+  File "/app/src/main.py", line 40, in is_conjugation_or_stem
+    base_stem, base_lemma = stem_and_lemmatize(base_word)
+  File "/app/src/main.py", line 34, in stem_and_lemmatize
+    lemma = lemmatizer.lemmatize(word, get_wordnet_pos(word))
+  File "/app/src/main.py", line 22, in get_wordnet_pos
+    tag = nltk.pos_tag([word])[0][1][0].upper()
+  File "/usr/local/lib/python3.9/site-packages/nltk/tag/__init__.py", line 166, in pos_tag
+    return _pos_tag(tokens, tagset, tagger, lang)
+  File "/usr/local/lib/python3.9/site-packages/nltk/tag/__init__.py", line 123, in _pos_tag
+    tagged_tokens = tagger.tag(tokens)
+  File "/usr/local/lib/python3.9/site-packages/nltk/tag/perceptron.py", line 180, in tag
+    context = self.START + [self.normalize(w) for w in tokens] + self.END
+  File "/usr/local/lib/python3.9/site-packages/nltk/tag/perceptron.py", line 180, in <listcomp>
+    context = self.START + [self.normalize(w) for w in tokens] + self.END
+  File "/usr/local/lib/python3.9/site-packages/nltk/tag/perceptron.py", line 275, in normalize
+    if "-" in word and word[0] != "-":
+TypeError: argument of type 'builtin_function_or_method' is not iterable

@@ -1,9 +1,9 @@
+Here is a python script:
+
+```
 import os
 import re
 import nltk
-# Download the required NLTK resource
-nltk.download('averaged_perceptron_tagger')
-nltk.download('wordnet')
 from nltk.corpus import wordnet
 from nltk.stem import WordNetLemmatizer, PorterStemmer
 import PyPDF2
@@ -89,6 +89,7 @@ def create_index_pdf(word_pages, dir_path):
 
     doc.build(Story)
 
+
 def main(args):
     pdf_path = args.pdf
     whitelist_path = args.whitelist
@@ -96,7 +97,8 @@ def main(args):
 
     # Read the whitelist words
     with open(whitelist_path, 'r') as file:
-        whitelist = set(line.strip().lower() for line in file)  # make whitelist words lowercase
+        whitelist = set(line.strip().lower
+        for line in file)  # make whitelist words lowercase
 
     # Extract the words and their pages from the PDF
     word_pages = extract_words(pdf_path, whitelist)
@@ -113,3 +115,56 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     main(args)
+
+```
+
+Here is the error:
+
+```
+Traceback (most recent call last):
+  File "/app/src/main.py", line 114, in <module>
+    main(args)
+  File "/app/src/main.py", line 101, in main
+    word_pages = extract_words(pdf_path, whitelist)
+  File "/app/src/main.py", line 61, in extract_words
+    if word == base_word or word.rstrip('es') == base_word or word.rstrip('s') == base_word or is_conjugation_or_stem(base_word, word):
+  File "/app/src/main.py", line 38, in is_conjugation_or_stem
+    base_stem, base_lemma = stem_and_lemmatize(base_word)
+  File "/app/src/main.py", line 32, in stem_and_lemmatize
+    lemma = lemmatizer.lemmatize(word, get_wordnet_pos(word))
+  File "/app/src/main.py", line 20, in get_wordnet_pos
+    tag = nltk.pos_tag([word])[0][1][0].upper()
+  File "/usr/local/lib/python3.9/site-packages/nltk/tag/__init__.py", line 165, in pos_tag
+    tagger = _get_tagger(lang)
+  File "/usr/local/lib/python3.9/site-packages/nltk/tag/__init__.py", line 107, in _get_tagger
+    tagger = PerceptronTagger()
+  File "/usr/local/lib/python3.9/site-packages/nltk/tag/perceptron.py", line 167, in __init__
+    find("taggers/averaged_perceptron_tagger/" + PICKLE)
+  File "/usr/local/lib/python3.9/site-packages/nltk/data.py", line 583, in find
+    raise LookupError(resource_not_found)
+LookupError: 
+**********************************************************************
+  Resource averaged_perceptron_tagger not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  >>> import nltk
+  >>> nltk.download('averaged_perceptron_tagger')
+  
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load taggers/averaged_perceptron_tagger/averaged_perceptron_tagger.pickle
+
+  Searched in:
+    - '/root/nltk_data'
+    - '/usr/local/nltk_data'
+    - '/usr/local/share/nltk_data'
+    - '/usr/local/lib/nltk_data'
+    - '/usr/share/nltk_data'
+    - '/usr/local/share/nltk_data'
+    - '/usr/lib/nltk_data'
+    - '/usr/local/lib/nltk_data'
+**********************************************************************
+
+```
+
+fix it.

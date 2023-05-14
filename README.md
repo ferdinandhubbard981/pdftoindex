@@ -13,7 +13,7 @@ docker build -t index-generator .
 ## Run Docker Container
 
 ```bash
-docker run -it --rm -v "$PWD":/app/content index-generator --input /app/your-input-file.pdf --blacklist /app/your-blacklist.txt--dir content/
+docker run -it --rm -v "$PWD":/app/content index-generator --input /app/your-input-file.pdf --whitelist /app/your-whitelist.txt--dir content/
 ```
 
 ## Move runscript to bin

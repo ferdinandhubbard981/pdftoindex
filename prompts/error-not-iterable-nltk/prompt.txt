@@ -1,0 +1,12 @@
+Here is a python script:
+
+```
+{script.txt}
+```
+
+Here is the error:
+```
+{error.txt}
+```
+
+fix it
