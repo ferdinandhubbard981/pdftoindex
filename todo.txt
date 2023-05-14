@@ -1,0 +1,4 @@
+make non case sensetive
+disregard any non-letter characters
+if text exceeds page width, wrap to next line
+make similar words have same hash

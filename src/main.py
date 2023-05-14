@@ -10,15 +10,15 @@ import argparse
 def extract_words(pdf_path, blacklist):
     # Open the PDF file
     with open(pdf_path, 'rb') as file:
-        reader = PyPDF2.PdfFileReader(file)
+        reader = PyPDF2.PdfReader(file)
 
         # Create a dictionary to store words and their page numbers
         word_pages = defaultdict(set)
 
         # Go through each page
-        for page_num in range(reader.getNumPages()):
-            page = reader.getPage(page_num)
-            words = page.extractText().split()
+        for page_num in range(len(reader.pages)):
+            page = reader.pages[page_num]
+            words = page.extract_text().split()
 
             # Store each word and its page number
             for word in words:
