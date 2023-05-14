@@ -1,1 +1,2 @@
-make similar words have same hash
+make words tighter
+make pages a5

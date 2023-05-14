@@ -1,3 +1,6 @@
+Here is a python script:
+
+```
 import os
 import re
 import nltk
@@ -113,3 +116,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     main(args)
+
+```
+
+tell me what I should change to make the spacing between paragraphs smaller by a half.
