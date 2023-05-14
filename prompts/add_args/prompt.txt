@@ -1,0 +1,15 @@
+Here is a python script:
+
+```
+{script.txt}
+```
+
+rewrite it such that it uses argparse for the three arguments
+Here's a description of the three arguments:
+
+```
+This python script reads a has 3 arguments: pdf, blacklist and dir.
+pdf is the path to the pdf file to be processed.
+blacklist is a txt that contains the words to be ignored. each word is on a new line.
+dir is the path to the directory where the output files will be saved.
+```

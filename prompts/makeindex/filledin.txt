@@ -1,0 +1,18 @@
+Write a python script that adheres to the following instructions:
+
+"""
+This python script reads a has 3 arguments: pdf, blacklist and dir.
+pdf is the path to the pdf file to be processed.
+blacklist is a txt that contains the words to be ignored. each word is on a new line.
+dir is the path to the directory where the output files will be saved.
+
+the script will output a pdf file called index.pdf
+
+index should contain all the words in the pdf file in alphabetical order except for the words in the blacklist.
+
+each word should be followed by the page numbers where the word appears in the pdf file.
+
+the page numbers should be in ascending order.
+
+The index should be well formatted and easy to read.
+"""

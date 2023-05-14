@@ -1,3 +1,6 @@
+Here is a python script:
+
+```
 import sys
 import os
 import PyPDF2
@@ -72,3 +75,15 @@ if __name__ == "__main__":
         sys.exit(1)
 
     main(sys.argv[1], sys.argv[2], sys.argv[3])
+
+```
+
+rewrite it such that it uses argparse for the three arguments
+Here's a description of the three arguments:
+
+```
+This python script reads a has 3 arguments: pdf, blacklist and dir.
+pdf is the path to the pdf file to be processed.
+blacklist is a txt that contains the words to be ignored. each word is on a new line.
+dir is the path to the directory where the output files will be saved.
+```
